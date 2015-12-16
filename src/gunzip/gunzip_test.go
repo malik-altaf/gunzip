@@ -85,8 +85,15 @@ func TestUnGzip(t *testing.T) {
 		t.Errorf("Should have returned nil response")
 	}
 	
+	CloseResponse(resp)
+	
 	url = "http://www.google.com"
-	resp,_ = DownloadUrl(&url)
+	resp,error = DownloadUrl(&url)
+	
+	if (error != nil) {
+		t.Errorf("Download failed")
+	}
+	
 	reader, error = UnGzip(&resp.Body)	
 	if error == nil {
 		t.Errorf("Should have returned error as the stream was not gz")
@@ -94,9 +101,13 @@ func TestUnGzip(t *testing.T) {
 	if reader != nil {
 		t.Errorf("Should have returned nil response")
 	}
+	CloseResponse(resp)
 	
 	url = tgz 
-	resp,_ = DownloadUrl(&url)
+	resp,error = DownloadUrl(&url)
+	if (error != nil) {
+		t.Errorf("Download failed")
+	}
 	reader, error = UnGzip(&resp.Body)		
 	if error != nil {
 		t.Errorf("Thrown error : ",error)
@@ -105,6 +116,7 @@ func TestUnGzip(t *testing.T) {
 	if reader == nil {
 		t.Errorf("Should have returned valid reader")
 	}
+	CloseResponse(resp)
 }
 
 func TestUnTar(t *testing.T) {
@@ -117,7 +129,10 @@ func TestUnTar(t *testing.T) {
 	}
 	
 	url := tgz 
-	resp,_ := DownloadUrl(&url)
+	resp,error := DownloadUrl(&url)
+	if (error != nil) {
+		t.Errorf("Download failed")
+	}	
 	greader, error := UnGzip(&resp.Body)
 	reader, error = UnTar(greader);	
 	CloseResponse(resp)

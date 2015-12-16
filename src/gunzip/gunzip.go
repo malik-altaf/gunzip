@@ -1,3 +1,6 @@
+/*
+This is a utility to extract a tar.gz file
+*/
 package gunzip
 
 import (
@@ -25,7 +28,7 @@ func DownloadUrl(url *string) (*http.Response, error) {
 }
 
 func CloseResponse(response *http.Response) {
-	if response != nil && response.Body != nil {
+	if (response != nil && response.Body != nil) {
 		response.Body.Close()	
 	}
 }
